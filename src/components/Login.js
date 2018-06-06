@@ -3,7 +3,26 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 
 class Login extends React.Component{
 
+  state = {
+    username: "",
+    password: "",
+  }
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    })
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(this.props);
+    this.props.onSubmit(this.state.username, this.state.password, this.props.history.push);
+  }
+
   render(){
+    const { submitLabel } = this.props;
+     const errors = this.props.errors.map(error => <h3>{error}</h3>)
     return(
     <div className='login-form'>
       <style>{`
@@ -18,18 +37,22 @@ class Login extends React.Component{
           <Header as='h2' color='grey' textAlign='center'>
             Log-in to your account
           </Header>
+          {errors}
           <Form size='large' onSubmit={this.handleSubmit}>
             <Segment stacked>
-              <Form.Input fluid icon='user' iconPosition='left' placeholder='Username' onChange={this.handle} />
+              <Form.Input fluid icon='user' iconPosition='left' placeholder='Username' name='username' onChange={this.handleChange} value={this.state.username}/>
               <Form.Input
                 fluid
                 icon='lock'
                 iconPosition='left'
                 placeholder='Password'
                 type='password'
+                name='password'
+                onChange={this.handleChange}
+                value={this.state.password}
               />
 
-            <Button color='grey' fluid size='large'>
+            <Button color='grey' fluid size='large' >
                 Login
               </Button>
             </Segment>
