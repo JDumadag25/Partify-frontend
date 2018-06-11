@@ -1,13 +1,20 @@
 import React from 'react'
+import PartyRoom from './PartyRoom'
+import SpotifyWebApi from 'spotify-web-api-js';
+const spotifyApi = new SpotifyWebApi();
 
 
 class Partify extends React.Component{
   constructor(props) {
       super(props);
+
+      const params = this.getHashParams();
+
       this.state = {
-        token: "",
+        refreshToken: params.refresh_token,
+        token: params.access_token,
         deviceId: "",
-        loggedIn: false,
+        loggedIn:  params.access_token ? true : false,
         error: "",
         trackName: "Track Name",
         artistName: "Artist Name",
@@ -16,16 +23,30 @@ class Partify extends React.Component{
         position: 0,
         duration: 0,
       };
-
       this.playerCheckInterval = null;
     }
+
+
+
+    getHashParams = () => {
+      var hashParams = {};
+      var e, r = /([^&;=]+)=?([^&;]*)/g,
+          q = window.location.hash.substring(1);
+      e = r.exec(q)
+      while (e) {
+         hashParams[e[1]] = decodeURIComponent(e[2]);
+         e = r.exec(q);
+      }
+      return hashParams
+    }
+    
 
   handleLogin = () => {
     if (this.state.token !== "") {
     this.setState({ loggedIn: true });
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
-  }
     }
+  }
 
     checkForPlayer = () => {
       const { token } = this.state;
@@ -99,19 +120,21 @@ onStateChanged = (state) => {
     }
 
     transferPlaybackHere = () => {
-  const { deviceId, token } = this.state;
-  fetch("https://api.spotify.com/v1/me/player", {
-    method: "PUT",
-    headers: {
-      authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      "device_ids": [ deviceId ],
-      "play": true,
-    }),
-  });
-}
+      const { deviceId, token } = this.state;
+      fetch("https://api.spotify.com/v1/me/player", {
+        method: "PUT",
+        headers: {
+          authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "device_ids": [ deviceId ],
+          "play": true,
+        }),
+    });
+  }
+
+
 
   render(){
     const {
@@ -124,18 +147,22 @@ onStateChanged = (state) => {
       position,
       duration,
       playing,
-      } = this.state;
+    } = this.state;
 
     return(
       <div className="App">
-    <div className="App-header">
-      <h2>Now Playing</h2>
-    </div>
+        <div className="App-header">
+          <a href='http://localhost:3001/'>
+            <button onClick={this.props.onClick}>Log out</button>
+          </a>
+          <h2>Now Playing</h2>
+        </div>
 
     {error && <p>Error: {error}</p>}
 
     {loggedIn ?
     (<div>
+      <button onClick={() => this.handleLogin()}>START THE PARTYYYYYY</button>
       <p>Artist: {artistName}</p>
       <p>Track: {trackName}</p>
       <p>Album: {albumName}</p>
@@ -144,22 +171,24 @@ onStateChanged = (state) => {
         <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
         <button onClick={() => this.onNextClick()}>Next</button>
       </p>
+      <PartyRoom token={this.state.token} />
 
     </div>)
     :
     (<div>
       <p className="App-intro">
-        Enter your Spotify access token. Get it from{" "}
-        <a href="https://beta.developer.spotify.com/documentation/web-playback-sdk/quick-start/#authenticating-with-spotify">
-          here
-        </a>.
+        Log Into Spotify
       </p>
-      <p>
+      <a href='http://localhost:8888'>
+        <button>Log in</button>
+      </a>
+      <br></br>
+      {/*<p>
         <input type="text" value={token} onChange={e => this.setState({ token: e.target.value })} />
       </p>
       <p>
         <button onClick={() => this.handleLogin()}>Go</button>
-      </p>
+      </p> */}
     </div>)
     }
   </div>

@@ -4,14 +4,13 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Partify from './components/Partify'
 import Home from './components/Home'
-import { BrowserRouter as Router, Route, NavLink, Redirect, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 
 class App extends Component {
 
-  state= {
+  state = {
     errors: [],
-    
   }
 
   login = (username, password, callback) => {
@@ -57,13 +56,12 @@ class App extends Component {
         this.setState({errors:[json.errors]})
       }
       });
-  }
+    }
 
-    // TODO: Add a logout button somewhere and call this.
-  logout = () => {
-    // You'll want to use:
-    //   localStorage.removeItem('key')
-  }
+    logout = () => {
+      localStorage.removeItem('token')
+    }
+
   render() {
 
     return (
@@ -75,7 +73,7 @@ class App extends Component {
 
           <Route path="/register" render={(props) => <Register submitLabel="Register" onSubmit={this.register} {...props} errors={this.state.errors}/>} />
 
-          { localStorage.getItem('token') ? <Route path="/partyroom" render={(props) => <Partify {...props} />} /> : <Redirect to="/login" /> }
+          { localStorage.getItem('token') ? <Route path="/partyroom" render={(props) => <Partify {...props} onClick={this.logout} />} /> : <Redirect to="/login" /> }
         </Switch>
       </Router>
 

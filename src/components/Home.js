@@ -1,6 +1,5 @@
 import React from 'react';
-import Login from './Login'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Grid, Header } from 'semantic-ui-react'
 
 class Home extends React.Component{
   render(){

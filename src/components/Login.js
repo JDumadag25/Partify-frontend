@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
+import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 
 class Login extends React.Component{
 
@@ -16,12 +16,10 @@ class Login extends React.Component{
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.props);
     this.props.onSubmit(this.state.username, this.state.password, this.props.history.push);
   }
 
   render(){
-    const { submitLabel } = this.props;
      const errors = this.props.errors.map(error => <h3>{error}</h3>)
     return(
     <div className='login-form'>
