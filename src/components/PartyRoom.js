@@ -32,22 +32,19 @@ class PartyRoom extends React.Component{
   getPlaylists = () => {
     console.log('playlist rendered');
     spotifyApi.getPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM')
-    .then(res => this.setState({playlist: res.tracks.items}))
+    .then(res => res.tracks.items.map(item => {
+      this.setState({playlist:[...this.state.playlist, item.track]})
+    }) )
   }
 
 
 //-------------------------- METHODS FOR VOTING----------------------//
   getSong = (e) => {
+
     spotifyApi.getTrack(e.target.value)
-    .then(res => { this.setState({selectedSong: {
-      name: res.name,
-      artist: res.artists[0].name,
-      image: res.album.images[0].url,
-      uri: res.uri,
-       }
-     })
-   })
-  }
+    .then(res =>  this.setState({selectedSong: {info: res, album: res.album}}))
+
+}
 
   handleUpvote = () => {
     const currentcount = this.state.upvotes
@@ -67,16 +64,16 @@ class PartyRoom extends React.Component{
   }
 
   addSong = () => {
-    let uri = this.state.selectedSong.uri
+    let uri = this.state.selectedSong.info.uri
     spotifyApi.addTracksToPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [uri])
+    this.setState({playlist: [...this.state.playlist, this.state.selectedSong.info]})
   }
 
   resetComponent = () => this.setState({selectedSong :{name:'NAME', artist:'ARTIST',image:'', uri:''}, upvotes:0, downvotes:0 })
 
   render(){
-    console.log(this.state);
     const songs = this.state.playlist.map(song => {
-      return <Songs song={song.track} />
+      return <Songs song={song} />
     })
 
     return(

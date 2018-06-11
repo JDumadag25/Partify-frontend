@@ -31,8 +31,9 @@ class Search extends React.Component{
    }
 
   render(){
+
     const songSearch = this.state.results.map(result => {
-      return <Results results={result} token={this.props.token} handleClick={this.props.handleClick} />
+      return <Results results={result} handleClick={this.props.handleClick} />
     })
     return(
       <div>

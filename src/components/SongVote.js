@@ -4,17 +4,16 @@ import { Image, Segment, Button, Card } from 'semantic-ui-react'
 
 
 const SongVote = (props) => {
-
   return(
     <Card>
-      <Image src={(props.data.image) || Pic} size='small' centered />
+      <Image src={(props.data.album) ? (props.data.album.images[0].url) : Pic} size='small' centered />
         <Card.Content>
-          <Card.Header>{props.data.name}</Card.Header>
-          <Card.Description>{props.data.artist}</Card.Description>
+          <Card.Header>{props.data.info ? props.data.info.name : 'Name'}</Card.Header>
+          <Card.Description>{props.data.album ? props.data.album.artists[0].name : 'Artist' }</Card.Description>
         </Card.Content>
         <Card.Content extra>
           <div>
-            { props.data.uri ?
+            { props.data.info ?
           <div>
             <Button primary onClick={props.handleUpvote}>Yes</Button>
             <Button secondary onClick={props.handleDownVote}>No</Button>
