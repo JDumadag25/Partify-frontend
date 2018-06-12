@@ -1,5 +1,6 @@
 import React from 'react'
 import PartyRoom from './PartyRoom'
+import { Button, Menu, Card, Icon, Image } from 'semantic-ui-react'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
 
@@ -39,7 +40,7 @@ class Partify extends React.Component{
       }
       return hashParams
     }
-    
+
 
   handleLogin = () => {
     if (this.state.token !== "") {
@@ -151,17 +152,30 @@ onStateChanged = (state) => {
 
     return(
       <div className="App">
-        <div className="App-header">
-          <a href='http://localhost:3001/'>
-            <button onClick={this.props.onClick}>Log out</button>
-          </a>
-          <h2>Now Playing</h2>
+
+        <div class="ui inverted menu">
+          <div class="item">
+            <h2>Partify</h2>
+          </div>
+
+          <div class="right item">
+            <a href='http://localhost:8888/'>
+              <div class="ui primary button">Log Into Spotify</div>
+           </a>
+            <a href='http://localhost:3001/'>
+              <div class="ui primary button" onClick={this.props.onClick}>Log Out</div>
+            </a>
+          </div>
         </div>
 
     {error && <p>Error: {error}</p>}
 
     {loggedIn ?
     (<div>
+      <h2 class="ui center aligned icon header">
+        <i class="play icon"></i>
+        PARTY-FI
+      </h2>
       <button onClick={() => this.handleLogin()}>START THE PARTYYYYYY</button>
       <p>Artist: {artistName}</p>
       <p>Track: {trackName}</p>
@@ -176,21 +190,10 @@ onStateChanged = (state) => {
     </div>)
     :
     (<div>
-      <p className="App-intro">
-        Log Into Spotify
-      </p>
-      <a href='http://localhost:8888'>
-        <button>Log in</button>
-      </a>
-      <br></br>
-      {/*<p>
-        <input type="text" value={token} onChange={e => this.setState({ token: e.target.value })} />
-      </p>
-      <p>
-        <button onClick={() => this.handleLogin()}>Go</button>
-      </p> */}
-    </div>)
+      <h1>Please Log into Spotify</h1>
+     </div>)
     }
+
   </div>
     )
   }

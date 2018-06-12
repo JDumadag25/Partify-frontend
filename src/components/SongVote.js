@@ -5,28 +5,34 @@ import { Image, Segment, Button, Card } from 'semantic-ui-react'
 
 const SongVote = (props) => {
   return(
-    <Card>
-      <Image src={(props.data.album) ? (props.data.album.images[0].url) : Pic} size='small' centered />
-        <Card.Content>
-          <Card.Header>{props.data.info ? props.data.info.name : 'Name'}</Card.Header>
-          <Card.Description>{props.data.album ? props.data.album.artists[0].name : 'Artist' }</Card.Description>
-        </Card.Content>
-        <Card.Content extra>
-          <div>
-            { props.data.info ?
-          <div>
-            <Button primary onClick={props.handleUpvote}>Yes</Button>
-            <Button secondary onClick={props.handleDownVote}>No</Button>
+    <div class="ui centered card">
+      <div class="image">
+        <Image src={(props.data.album) ? (props.data.album.images[0].url) : Pic} centered />
+      </div>
+      <div class="content">
+        <a class="header">{props.data.info ? props.data.info.name : 'Name'}</a>
+      </div>
+      <div class="description">
+          {props.data.album ? props.data.album.artists[0].name : 'Artist' }
+      </div>
+      <div>
+      {props.data.info ?
+      <div class="extra content">
+        <div class="ui two buttons">
+          <div class="ui basic green button" onClick={props.handleUpvote}>Yes</div>
+          <div class="ui basic red button" onClick={props.handleDownVote}>No</div>
+        </div>
+      </div>
+      :
+      <div class="extra content">
+          <div class="ui two buttons">
+            <div class="ui disabled button">Vote</div>
+            <div class="ui disabled button">Casted</div>
           </div>
-            :
-          <div>
-            <button class="ui disabled button">Voting</button>
-            <button class="ui disabled button">Done</button>
-          </div>
-            }
-          </div>
-        </Card.Content>
-      </Card>
+        </div>
+      }
+      </div>
+    </div>
     )
 }
 

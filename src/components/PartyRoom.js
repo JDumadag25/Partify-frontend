@@ -3,6 +3,7 @@ import Songs from './Songs'
 import Search from './Search'
 import Results from './Results'
 import SongVote from './SongVote'
+import { Grid, Image } from 'semantic-ui-react'
 // import Pic from '../images/song.jpg'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
@@ -78,11 +79,15 @@ class PartyRoom extends React.Component{
 
     return(
       <div>
-      <SongVote data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} />
-      <div class="ui grid">
-        <div class="eight wide column" style={{overflow: 'auto', maxHeight: 500, padding: 50}}>{songs}</div>
-        <div class="eight wide column"><Search token={this.props.token} handleClick={this.getSong}/></div>
-      </div>
+        <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} />
+        <div class="ui grid">
+          <div class="eight wide column" style={{overflow: 'auto', maxHeight: 500, padding: 50}}>
+            {songs}
+          </div>
+          <div class="eight wide column">
+            <Search token={this.props.token} handleClick={this.getSong}/>
+          </div>
+        </div>
       </div>
     )
   }
