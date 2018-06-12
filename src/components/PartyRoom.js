@@ -72,9 +72,26 @@ class PartyRoom extends React.Component{
 
   resetComponent = () => this.setState({selectedSong :{name:'NAME', artist:'ARTIST',image:'', uri:''}, upvotes:0, downvotes:0 })
 
+  //---------------------------------------------------------------------------//
+  //--------------------------Methods to remove songs--------------------------//
+
+  removeSong = (e) => {
+    console.log('remove song click');
+    console.log(e.target.value);
+    let trackUri = e.target.value
+    spotifyApi.removeTracksFromPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [trackUri])
+    const updatedPlaylist = this.state.playlist.filter(song => {
+      return song.uri !== trackUri
+    })
+    this.setState({playlist: updatedPlaylist})
+  }
+
+
+  //---------------------------------------------------------------------------//
+
   render(){
     const songs = this.state.playlist.map(song => {
-      return <Songs song={song} />
+      return <Songs song={song} removeSong={this.removeSong} />
     })
 
     return(
