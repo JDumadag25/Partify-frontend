@@ -60,6 +60,8 @@ class App extends Component {
 
     logout = () => {
       localStorage.removeItem('token')
+      localStorage.removeItem('user_id')
+      localStorage.removeItem('username')
     }
 
   render() {

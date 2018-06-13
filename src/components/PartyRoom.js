@@ -58,8 +58,8 @@ class PartyRoom extends React.Component{
 
   handleDownVote = () => {
     const currentcount = this.state.downvotes
+    this.setState({downvotes: currentcount + 1 })
     if (currentcount > 3 ) {
-     this.setState({downvotes: currentcount + 1 })
      this.resetComponent()
    }
   }
@@ -90,6 +90,7 @@ class PartyRoom extends React.Component{
   //---------------------------------------------------------------------------//
 
   render(){
+    console.log(this.state);
     const songs = this.state.playlist.map(song => {
       return <Songs song={song} removeSong={this.removeSong} />
     })
