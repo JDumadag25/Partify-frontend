@@ -11,7 +11,6 @@ class Songs extends React.Component{
 
 
   render(){
-    console.log(this.props.song);
     // const artists = this.props.song.artists.map(artist => <span>{artist.name}</span>)
 const { song } = this.props
     return(

@@ -1,6 +1,7 @@
 import React from 'react'
 import PartyRoom from './PartyRoom'
 import { Button, Menu, Card, Icon, Image } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom';
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
 
@@ -135,6 +136,10 @@ onStateChanged = (state) => {
     });
   }
 
+  onClick = () => {
+    this.props.handleClick(this.props.history.push)
+  }
+
 
 
   render(){
@@ -162,9 +167,9 @@ onStateChanged = (state) => {
             <a href='http://localhost:8888/'>
               <div class="ui primary button">Log Into Spotify</div>
            </a>
-            <a href='http://localhost:3001/'>
-              <div class="ui primary button" onClick={this.props.onClick}>Log Out</div>
-            </a>
+           <a>
+             <div class="ui primary button" onClick={this.onClick}>Log Out</div>
+          </a>
           </div>
         </div>
 

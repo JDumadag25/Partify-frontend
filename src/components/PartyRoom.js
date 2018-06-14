@@ -25,14 +25,12 @@ class PartyRoom extends React.Component{
          upvotes:0,
          downvotes:0
        }
-
-
     }
 
   componentDidMount = () => {
     this.getPlaylists()
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-    this.sub = cable.subscriptions.create('SongsChannel', {
+    this.subscription = cable.subscriptions.create('SongsChannel', {
       received: this.handleNewSongs
     })
   }
@@ -45,7 +43,7 @@ class PartyRoom extends React.Component{
     }) )
   }
 
-  handleNewSongs = ({name, artist, image, uri, upvotes, downvotes, trackid}) => {
+  handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid}) => {
     if(uri !== this.state.selectedSong.uri ){
       console.log('Song is different, Changing State');
         this.setState({selectedSong: {
@@ -58,7 +56,10 @@ class PartyRoom extends React.Component{
         upvotes:upvotes,
         downvotes:downvotes
       })
-      } else {
+    } else if (upvotes === 4) {
+        console.log(upvotes);
+        const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
+        await this.setState({playlist: [...this.state.playlist, newSong]})
         console.log("song is the same");
       }
 
@@ -71,7 +72,6 @@ class PartyRoom extends React.Component{
   getSong = async(e) => {
 
     const res = await spotifyApi.getTrack(e.target.value)
-    console.log(res);
      await this.setState({chosenSong: res,
       selectedSong: {
       name: res.name,
@@ -81,7 +81,7 @@ class PartyRoom extends React.Component{
       trackid: res.id
     },
     upvotes: 0,
-  downvotes:0
+    downvotes:0
   }
   )
   this.sendToBack()
@@ -89,7 +89,7 @@ class PartyRoom extends React.Component{
 
   sendToBack = () => {
     console.log("Sending to the backend");
-    this.sub.send({ name: this.state.selectedSong.name,
+    this.subscription.send({ name: this.state.selectedSong.name,
       artist: this.state.selectedSong.artist,
       uri: this.state.selectedSong.uri,
       image: this.state.selectedSong.image,
@@ -122,9 +122,10 @@ class PartyRoom extends React.Component{
 
   addSong = async() => {
     let uri = this.state.selectedSong.uri
-    const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid)
+    const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
     spotifyApi.addTracksToPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [uri])
-    this.setState({playlist: [...this.state.playlist, newSong]})
+    await this.setState({playlist: [...this.state.playlist, newSong]})
+
   }
 
   resetComponent = async() => {
@@ -148,6 +149,9 @@ class PartyRoom extends React.Component{
   //   this.setState({playlist: updatedPlaylist})
   // }
   //---------------------------------------------------------------------------//
+
+
+
 
   render(){
 
