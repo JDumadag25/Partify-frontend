@@ -9,12 +9,9 @@ class Songs extends React.Component{
 
 
 
-  playSong = () => {
-    console.log('song play click');
-  }
 
   render(){
-console.log(this.props.song);
+    console.log(this.props.song);
     // const artists = this.props.song.artists.map(artist => <span>{artist.name}</span>)
 const { song } = this.props
     return(
@@ -22,7 +19,7 @@ const { song } = this.props
          <List.Item>
            <List.Content floated='right'>
             {/* <Button compact size='small' onClick={this.playSong}>Play</Button> */}
-             <Button compact size='small' onClick={this.props.removeSong} value={song.uri}>Remove</Button>
+            {/* <Button compact size='small' onClick={this.props.removeSong} value={song.uri}>Remove</Button>*/}
            </List.Content>
            <List.Content floated='left'>
              <i class="large itunes note icon"></i>
