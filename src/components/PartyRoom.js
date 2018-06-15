@@ -23,7 +23,8 @@ class PartyRoom extends React.Component{
           uri:''
         },
          upvotes:0,
-         downvotes:0
+         downvotes:0,
+         isClicked: false
        }
     }
 
@@ -46,7 +47,7 @@ class PartyRoom extends React.Component{
   handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid}) => {
     if(uri !== this.state.selectedSong.uri ){
       console.log('Song is different, Changing State');
-        this.setState({selectedSong: {
+        await this.setState({selectedSong: {
           name: name,
           artist: artist,
           image: image,
@@ -54,15 +55,19 @@ class PartyRoom extends React.Component{
           trackid: trackid
         },
         upvotes:upvotes,
-        downvotes:downvotes
+        downvotes:downvotes,
+        isClicked:false
       })
-    } else if (upvotes === 4) {
-        console.log(upvotes);
+
+    } else if (upvotes === 2) {
+
         const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
         await this.setState({playlist: [...this.state.playlist, newSong]})
+        this.resetComponent()
         console.log("song is the same");
+      } else {
+        console.log(upvotes);
       }
-
   }
 
 
@@ -70,7 +75,6 @@ class PartyRoom extends React.Component{
 
 //-------------------------- METHODS FOR VOTING----------------------//
   getSong = async(e) => {
-
     const res = await spotifyApi.getTrack(e.target.value)
      await this.setState({chosenSong: res,
       selectedSong: {
@@ -80,14 +84,15 @@ class PartyRoom extends React.Component{
       image: res.album.images[0].url,
       trackid: res.id
     },
-    upvotes: 0,
-    downvotes:0
+    upvotes: 1,
+    downvotes: 1,
+    isClicked: true
   }
   )
-  this.sendToBack()
+  await this.sendToBack()
 }
 
-  sendToBack = () => {
+  sendToBack = async() => {
     console.log("Sending to the backend");
     this.subscription.send({ name: this.state.selectedSong.name,
       artist: this.state.selectedSong.artist,
@@ -103,9 +108,10 @@ class PartyRoom extends React.Component{
 
   handleUpvote = async() => {
     const currentcount = this.state.upvotes
+    console.log('upvotes',this.state.upvotes);
     await this.setState({upvotes: currentcount + 1 })
-     this.sendToBack()
-    if (this.state.upvotes > 3 ) {
+    await this.sendToBack()
+    if (this.state.upvotes === 2 ) {
       this.addSong()
       this.resetComponent()
     }
@@ -114,9 +120,9 @@ class PartyRoom extends React.Component{
   handleDownVote = async() => {
     const currentcount = this.state.downvotes
     await this.setState({downvotes: currentcount + 1 })
-    this.sendToBack()
-    if (this.state.downvotes > 3 ) {
-     this.resetComponent()
+    await this.sendToBack()
+    if (this.state.downvotes === 2 ) {
+     await this.resetComponent()
    }
   }
 
@@ -128,8 +134,9 @@ class PartyRoom extends React.Component{
 
   }
 
-  resetComponent = async() => {
-    await this.setState({chosenSong: '', selectedSong :{name:'', artist:'',image:'', uri:''}, upvotes:0, downvotes:0 })
+  resetComponent = () => {
+    console.log('resetting state');
+    this.setState({chosenSong: '', selectedSong :{name:'', artist:'',image:'', uri:''}, upvotes:0, downvotes:0, isClicked: false })
     this.sendToBack()
   }
 
@@ -156,12 +163,12 @@ class PartyRoom extends React.Component{
   render(){
 
     const songs = this.state.playlist.map(song => {
-      return <Songs song={song} removeSong={this.removeSong} />
+      return <Songs song={song} removeSong={this.removeSong}  />
     })
 
     return(
       <div>
-        <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} />
+        <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} isClicked={this.state.isClicked}/>
         <div class="ui grid">
           <div class="eight wide column" style={{overflow: 'auto', maxHeight: 500, padding: 50}}>
             {songs}
