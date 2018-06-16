@@ -6,7 +6,7 @@ import { Image, Segment, Button, Card } from 'semantic-ui-react'
 const SongVote = (props) => {
   console.log(props.isClicked);
   return(
-    <div class="ui centered card">
+    <div class="ui centered card" id='card'>
       <div class="image">
         <Image src={(props.data.image) ? (props.data.image) : Pic} centered />
       </div>
@@ -38,6 +38,10 @@ const SongVote = (props) => {
     </div>
     )
 }
+
+
+
+
 
 
 export default SongVote

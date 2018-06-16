@@ -4,7 +4,8 @@ import Search from './Search'
 import Results from './Results'
 import SongVote from './SongVote'
 import ActionCable from 'actioncable'
-import { Grid, Image } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom';
+import { Grid, Image, Sidebar, Segment, Button, Menu, Icon, Header } from 'semantic-ui-react'
 // import Pic from '../images/song.jpg'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi
@@ -24,7 +25,8 @@ class PartyRoom extends React.Component{
         },
          upvotes:0,
          downvotes:0,
-         isClicked: false
+         isClicked: false,
+         renderTab: 'music'
        }
     }
 
@@ -88,7 +90,7 @@ class PartyRoom extends React.Component{
     downvotes: 1,
     isClicked: true
   }
-  )
+ )
   await this.sendToBack()
 }
 
@@ -104,7 +106,6 @@ class PartyRoom extends React.Component{
       id: 1 })
   }
 
-//this.setState({selectedSong: {info: res, album: res.album}})
 
   handleUpvote = async() => {
     const currentcount = this.state.upvotes
@@ -140,46 +141,70 @@ class PartyRoom extends React.Component{
     this.sendToBack()
   }
 
-  //---------------------------------------------------------------------------//
-  //--------------------------Methods to remove songs--------------------------//
-  //
-  //----------ADVISED TO REMOVE CAUSE ANYONE CAN REMOVE (WILL MAYBE IMPLEMENT VOTE TO REMOVE)-----//
-  //
-  // removeSong = (e) => {
-  //   console.log('remove song click');
-  //   console.log(e.target.value);
-  //   let trackUri = e.target.value
-  //   spotifyApi.removeTracksFromPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [trackUri])
-  //   const updatedPlaylist = this.state.playlist.filter(song => {
-  //     return song.uri !== trackUri
-  //   })
-  //   this.setState({playlist: updatedPlaylist})
-  // }
-  //---------------------------------------------------------------------------//
-
-
+  changeTab = (tabName) => {
+       this.setState({ renderTab: tabName })
+   }
 
 
   render(){
+
+    const { renderTab } = this.state
 
     const songs = this.state.playlist.map(song => {
       return <Songs song={song} removeSong={this.removeSong}  />
     })
 
+    const RenderedContent = ({ tabName }) => {
+      if (tabName === 'music') {
+        return songs
+    }
+      if (tabName === 'search') {
+        return <Search token={this.props.token} handleClick={this.getSong}/>
+    }
+      if (tabName === 'vote') {
+        return <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} isClicked={this.state.isClicked}/>
+    }
+  }
+
     return(
-      <div>
-        <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} isClicked={this.state.isClicked}/>
-        <div class="ui grid">
-          <div class="eight wide column" style={{overflow: 'auto', maxHeight: 500, padding: 50}}>
-            {songs}
-          </div>
-          <div class="eight wide column">
-            <Search token={this.props.token} handleClick={this.getSong}/>
-          </div>
-        </div>
+      <div id='menu' style={{padding:20}}>
+        <Sidebar.Pushable as={Segment} style={{maxHeight: 700}}>
+          <Sidebar
+            as={Menu}
+            width='thin'
+            visible
+            icon='labeled'
+            vertical
+            inverted
+          >
+            <Menu.Item onClick={() => this.changeTab('music')} name='music'>
+              <Icon name='music' />
+              Playlist
+            </Menu.Item>
+            <Menu.Item onClick={() => this.changeTab('search')} name='search'>
+              <Icon name='search' />
+              Search
+            </Menu.Item>
+            <Menu.Item onClick={() => this.changeTab('vote')} name='vote'>
+              <Icon name='like' />
+              Vote
+            </Menu.Item>
+            <Menu.Item onClick={() => this.changeTab('chat')} name='chat'>
+              <Icon name='chat' />
+              Chat
+            </Menu.Item>
+          </Sidebar>
+          <Sidebar.Pusher id='component'>
+            <Segment basic id='component' >
+              <RenderedContent tabName={renderTab} />
+            </Segment>
+          </Sidebar.Pusher>
+        </Sidebar.Pushable>
       </div>
     )
   }
+
+
 }
 
 export default PartyRoom

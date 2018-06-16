@@ -9,7 +9,7 @@ const Results = (props) => {
 
     // const artist = this.props.results.artists.map(artist => <span>{artist.name}</span>)
     return (
-      <List celled>
+      <List celled >
          <List.Item>
            <List.Content floated='right'>
              <Button compact size='small' onClick={props.handleClick} value={props.results.id} >Vote</Button>

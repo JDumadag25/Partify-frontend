@@ -177,6 +177,7 @@ onStateChanged = (state) => {
 
     {loggedIn ?
     (<div>
+      <div id='music-player'>
       <h2 class="ui center aligned icon header">
         <i class="play icon"></i>
         PARTY-FI
@@ -190,9 +191,15 @@ onStateChanged = (state) => {
         <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
         <button onClick={() => this.onNextClick()}>Next</button>
       </p>
-      <PartyRoom token={this.state.token} />
+      </div>
 
-    </div>)
+         <PartyRoom token={this.state.token} />
+
+    </div>
+
+
+
+    )
     :
     (<div>
       <h1>Please Log into Spotify</h1>

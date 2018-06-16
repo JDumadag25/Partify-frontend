@@ -26,3 +26,13 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+#component{
+  margin-right: 50px;
+  height: 600px;
+  overflow: auto
+}
+
+#song-list{
+  max-height: 700px;
+}

@@ -38,7 +38,7 @@ class Search extends React.Component{
     return(
       <div>
         <Form>
-          <Form.Field>
+          <Form.Field style={{marginRight:45}}>
             <label>Search</label>
             <input placeholder='Search' onChange={this.handleSearchChange}  />
           </Form.Field>

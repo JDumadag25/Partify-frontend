@@ -14,7 +14,7 @@ class Songs extends React.Component{
     // const artists = this.props.song.artists.map(artist => <span>{artist.name}</span>)
 const { song } = this.props
     return(
-      <List celled>
+      <List celled id='song-list'>
          <List.Item>
            <List.Content floated='right'>
             {/* <Button compact size='small' onClick={this.playSong}>Play</Button> */}
