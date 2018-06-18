@@ -204,6 +204,8 @@ console.log(this.state.voted);
         </Sidebar.Pushable>
       </div>
       </div>
+
+      
     )
   }
 

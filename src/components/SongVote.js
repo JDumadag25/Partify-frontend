@@ -28,8 +28,6 @@ const SongVote = (props) => {
                     <div class="ui disabled button">Casted</div>
                   </div>
                 </div>
-                
-
           }</p>
         </Modal.Description>
       </Modal.Content>
