@@ -3,6 +3,7 @@ import Songs from './Songs'
 import Search from './Search'
 import Results from './Results'
 import SongVote from './SongVote'
+import Chat from './Chat'
 import ActionCable from 'actioncable'
 import { NavLink } from 'react-router-dom';
 import { Grid, Image, Sidebar, Segment, Button, Menu, Icon, Header } from 'semantic-ui-react'
@@ -173,41 +174,53 @@ console.log(this.state.voted);
       <div>
       <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} votedOn={this.state.votedOn} isClicked={this.state.isClicked}/>
 
-      <div id='menu' style={{padding:20}}>
-        <Sidebar.Pushable as={Segment} style={{maxHeight: 700}}>
-          <Sidebar
-            as={Menu}
-            width='thin'
-            visible
-            icon='labeled'
-            vertical
-            inverted
-          >
-            <Menu.Item onClick={() => this.changeTab('search')} name='search'>
-              <Icon name='search' />
-              Search
-            </Menu.Item>
-            <Menu.Item onClick={() => this.changeTab('music')} name='music'>
-              <Icon name='music' />
-              Playlist
-            </Menu.Item>
-            <Menu.Item onClick={() => this.changeTab('chat')} name='chat'>
-              <Icon name='chat' />
-              Chat
-            </Menu.Item>
-          </Sidebar>
-          <Sidebar.Pusher id='component'>
-            <Segment basic id='component' >
-              <RenderedContent tabName={renderTab} />
-            </Segment>
-          </Sidebar.Pusher>
-        </Sidebar.Pushable>
-      </div>
+      <Grid>
+        <Grid.Column width={12}>
+          <div id='menu' style={{padding:20}}>
+            <Sidebar.Pushable as={Segment} style={{maxHeight: 700}}>
+              <Sidebar
+                as={Menu}
+                width='thin'
+                visible
+                icon='labeled'
+                vertical
+                inverted
+              >
+                <Menu.Item onClick={() => this.changeTab('search')} name='search'>
+                  <Icon name='search' />
+                  Search
+                </Menu.Item>
+                <Menu.Item onClick={() => this.changeTab('music')} name='music'>
+                  <Icon name='music' />
+                  Playlist
+                </Menu.Item>
+                <Menu.Item onClick={() => this.changeTab('chat')} name='chat'>
+                  <Icon name='chat' />
+                  Chat
+                </Menu.Item>
+              </Sidebar>
+              <Sidebar.Pusher id='component'>
+                <Segment basic id='component' >
+                  <RenderedContent tabName={renderTab} />
+                </Segment>
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
+          </div>
+        </Grid.Column>
+        <Grid.Column width={4} >
+          <Chat/>
+        </Grid.Column>
+      </Grid>
+
       </div>
     )
   }
 
 
 }
+
+
+
+
 
 export default PartyRoom
