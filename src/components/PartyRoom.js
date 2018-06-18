@@ -1,11 +1,9 @@
 import React from 'react'
 import Songs from './Songs'
 import Search from './Search'
-import Results from './Results'
 import SongVote from './SongVote'
 import ActionCable from 'actioncable'
-import { NavLink } from 'react-router-dom';
-import { Grid, Image, Sidebar, Segment, Button, Menu, Icon, Header } from 'semantic-ui-react'
+import { Sidebar, Segment, Menu, Icon } from 'semantic-ui-react'
 // import Pic from '../images/song.jpg'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi
@@ -152,8 +150,6 @@ class PartyRoom extends React.Component{
 
   render(){
 
-console.log(this.state.voted);
-
     const { renderTab } = this.state
 
     const songs = this.state.playlist.map(song => {
@@ -205,7 +201,7 @@ console.log(this.state.voted);
       </div>
       </div>
 
-      
+
     )
   }
 

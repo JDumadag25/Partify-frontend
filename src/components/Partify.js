@@ -1,11 +1,5 @@
 import React from 'react'
 import PartyRoom from './PartyRoom'
-import { Button, Menu, Card, Icon, Image } from 'semantic-ui-react'
-import { NavLink } from 'react-router-dom';
-import background from '../images/background.jpg'
-import SpotifyWebApi from 'spotify-web-api-js';
-const spotifyApi = new SpotifyWebApi();
-
 
 class Partify extends React.Component{
   constructor(props) {
