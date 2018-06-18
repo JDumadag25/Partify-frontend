@@ -2,6 +2,7 @@ import React from 'react'
 import PartyRoom from './PartyRoom'
 import { Button, Menu, Card, Icon, Image } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom';
+import background from '../images/background.jpg'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
 
@@ -28,8 +29,6 @@ class Partify extends React.Component{
       this.playerCheckInterval = null;
     }
 
-
-
     getHashParams = () => {
       var hashParams = {};
       var e, r = /([^&;=]+)=?([^&;]*)/g,
@@ -42,7 +41,6 @@ class Partify extends React.Component{
       return hashParams
     }
 
-
   handleLogin = () => {
     if (this.state.token !== "") {
     this.setState({ loggedIn: true });
@@ -50,18 +48,18 @@ class Partify extends React.Component{
     }
   }
 
-    checkForPlayer = () => {
-      const { token } = this.state;
-        if (window.Spotify !== null) {
-          clearInterval(this.playerCheckInterval);
-          this.player = new window.Spotify.Player({
-            name: "Justin's spotify player",
-            getOAuthToken: cb => { cb(token); },
-          });
-          this.createEventHandlers();
-          this.player.connect();
-        }
+  checkForPlayer = () => {
+    const { token } = this.state;
+      if (window.Spotify !== null) {
+        clearInterval(this.playerCheckInterval);
+        this.player = new window.Spotify.Player({
+          name: "Justin's spotify player",
+          getOAuthToken: cb => { cb(token); },
+        });
+        this.createEventHandlers();
+        this.player.connect();
       }
+    }
 
   createEventHandlers = () => {
   this.player.on('initialization_error', e => { console.error(e); });
@@ -109,32 +107,32 @@ onStateChanged = (state) => {
   }
 }
 
-    onPrevClick() {
-      this.player.previousTrack();
-    }
-
-    onPlayClick() {
-      this.player.togglePlay();
-    }
-
-    onNextClick() {
-      this.player.nextTrack();
-    }
-
-    transferPlaybackHere = () => {
-      const { deviceId, token } = this.state;
-      fetch("https://api.spotify.com/v1/me/player", {
-        method: "PUT",
-        headers: {
-          authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          "device_ids": [ deviceId ],
-          "play": true,
-        }),
-    });
+  onPrevClick() {
+    this.player.previousTrack();
   }
+
+  onPlayClick() {
+    this.player.togglePlay();
+  }
+
+  onNextClick() {
+    this.player.nextTrack();
+  }
+
+  transferPlaybackHere = () => {
+    const { deviceId, token } = this.state;
+    fetch("https://api.spotify.com/v1/me/player", {
+      method: "PUT",
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "device_ids": [ deviceId ],
+        "play": true,
+      }),
+  });
+}
 
   onClick = () => {
     this.props.handleClick(this.props.history.push)
@@ -178,14 +176,15 @@ onStateChanged = (state) => {
     {loggedIn ?
     (<div>
       <div id='music-player'>
-      <h2 class="ui center aligned icon header">
-        <i class="play icon"></i>
-        PARTY-FI
+
+      <h2 class="ui center aligned icon header" id='nowplaying'>
+        <i class="play icon" onClick={() => this.handleLogin()}></i>
+        NOW PLAYING
       </h2>
-      <button onClick={() => this.handleLogin()}>START THE PARTYYYYYY</button>
-      <p>Artist: {artistName}</p>
-      <p>Track: {trackName}</p>
-      <p>Album: {albumName}</p>
+      {/*<button onClick={() => this.handleLogin()}>START THE PARTYYYYYY</button>*/}
+      <p id='nowplaying'>Artist: {artistName}</p>
+      <p id='nowplaying'>Track: {trackName}</p>
+      <p id='nowplaying'>Album: {albumName}</p>
       <p>
         <button onClick={() => this.onPrevClick()}>Previous</button>
         <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>

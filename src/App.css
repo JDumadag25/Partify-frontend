@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: black
 }
 
 .App-logo {
@@ -35,4 +36,14 @@
 
 #song-list{
   max-height: 700px;
+}
+
+#music-player{
+  background-image: url('../src/images/background.jpg');
+  height: 425px;
+  padding-top: 60px
+}
+
+#nowplaying{
+  color: white
 }

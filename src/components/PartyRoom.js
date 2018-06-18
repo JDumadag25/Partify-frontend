@@ -26,6 +26,7 @@ class PartyRoom extends React.Component{
          upvotes:0,
          downvotes:0,
          isClicked: false,
+         votedOn: false,
          renderTab: 'music'
        }
     }
@@ -46,7 +47,7 @@ class PartyRoom extends React.Component{
     }) )
   }
 
-  handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid}) => {
+  handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid, vote}) => {
     if(uri !== this.state.selectedSong.uri ){
       console.log('Song is different, Changing State');
         await this.setState({selectedSong: {
@@ -58,7 +59,8 @@ class PartyRoom extends React.Component{
         },
         upvotes:upvotes,
         downvotes:downvotes,
-        isClicked:false
+        isClicked:vote,
+        votedOn: true
       })
 
     } else if (upvotes === 2) {
@@ -88,7 +90,8 @@ class PartyRoom extends React.Component{
     },
     upvotes: 1,
     downvotes: 1,
-    isClicked: true
+    isClicked: true,
+    votedOn: false
   }
  )
   await this.sendToBack()
@@ -103,6 +106,7 @@ class PartyRoom extends React.Component{
       upvotes: this.state.upvotes,
       downvotes: this.state.downvotes,
       trackid: this.state.selectedSong.trackid,
+      vote: this.state.isClicked,
       id: 1 })
   }
 
@@ -135,10 +139,10 @@ class PartyRoom extends React.Component{
 
   }
 
-  resetComponent = () => {
+  resetComponent = async() => {
     console.log('resetting state');
-    this.setState({chosenSong: '', selectedSong :{name:'', artist:'',image:'', uri:''}, upvotes:0, downvotes:0, isClicked: false })
-    this.sendToBack()
+    await this.setState({chosenSong: '', selectedSong :{name:'', artist:'',image:'', uri:''}, upvotes:0, downvotes:0, isClicked: false, votedOn:false, renderTab: 'music' })
+    await this.sendToBack()
   }
 
   changeTab = (tabName) => {
@@ -147,6 +151,8 @@ class PartyRoom extends React.Component{
 
 
   render(){
+
+console.log(this.state.voted);
 
     const { renderTab } = this.state
 
@@ -161,12 +167,12 @@ class PartyRoom extends React.Component{
       if (tabName === 'search') {
         return <Search token={this.props.token} handleClick={this.getSong}/>
     }
-      if (tabName === 'vote') {
-        return <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} isClicked={this.state.isClicked}/>
-    }
   }
 
     return(
+      <div>
+      <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} votedOn={this.state.votedOn} isClicked={this.state.isClicked}/>
+
       <div id='menu' style={{padding:20}}>
         <Sidebar.Pushable as={Segment} style={{maxHeight: 700}}>
           <Sidebar
@@ -177,17 +183,13 @@ class PartyRoom extends React.Component{
             vertical
             inverted
           >
-            <Menu.Item onClick={() => this.changeTab('music')} name='music'>
-              <Icon name='music' />
-              Playlist
-            </Menu.Item>
             <Menu.Item onClick={() => this.changeTab('search')} name='search'>
               <Icon name='search' />
               Search
             </Menu.Item>
-            <Menu.Item onClick={() => this.changeTab('vote')} name='vote'>
-              <Icon name='like' />
-              Vote
+            <Menu.Item onClick={() => this.changeTab('music')} name='music'>
+              <Icon name='music' />
+              Playlist
             </Menu.Item>
             <Menu.Item onClick={() => this.changeTab('chat')} name='chat'>
               <Icon name='chat' />
@@ -200,6 +202,7 @@ class PartyRoom extends React.Component{
             </Segment>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
+      </div>
       </div>
     )
   }

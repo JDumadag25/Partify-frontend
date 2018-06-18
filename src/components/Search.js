@@ -1,6 +1,5 @@
 import React from 'react'
 import Results from './Results'
-import _ from 'lodash'
 import { Button, Checkbox, Form, List } from 'semantic-ui-react'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi();
@@ -16,7 +15,7 @@ class Search extends React.Component{
     this.resetComponent()
   }
 
-  resetComponent = () => this.setState({ results: [], query: '' })
+resetComponent = () => this.setState({ results: [], query: '' })
 
  handleSearchChange = (e) => {
     this.setState({query: e.target.value})
@@ -24,9 +23,8 @@ class Search extends React.Component{
     setTimeout(() => {
     if (this.state.query.length < 1) return this.resetComponent()
 
-    spotifyApi.search(this.state.query, ['track'], {limit: 7})
+    spotifyApi.search(this.state.query, ['track'], {limit: 10})
     .then(res => this.setState({results: res.tracks.items}))
-
       }, 500)
    }
 
