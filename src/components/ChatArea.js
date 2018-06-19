@@ -11,7 +11,6 @@ console.log(this.props.chat);
           <List.Item>
             <List.Content>
               <List.Header>{this.props.chat.content}</List.Header>
-            {this.props.chat.created_at}
             </List.Content>
           </List.Item>
         </List>

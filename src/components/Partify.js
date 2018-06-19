@@ -1,6 +1,6 @@
 import React from 'react'
 import PartyRoom from './PartyRoom'
-import { Button, Menu, Card, Icon, Image } from 'semantic-ui-react'
+import { Button, Menu, Card, Icon, Image, Radio } from 'semantic-ui-react'
 import { NavLink } from 'react-router-dom';
 import background from '../images/background.jpg'
 import SpotifyWebApi from 'spotify-web-api-js';
@@ -25,6 +25,8 @@ class Partify extends React.Component{
         playing: false,
         position: 0,
         duration: 0,
+        nowPlaying:false,
+        togglePlayer: false
       };
       this.playerCheckInterval = null;
     }
@@ -43,7 +45,7 @@ class Partify extends React.Component{
 
   handleLogin = () => {
     if (this.state.token !== "") {
-    this.setState({ loggedIn: true });
+    this.setState({ loggedIn: true, nowPlaying:true });
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
     }
   }
@@ -138,6 +140,11 @@ onStateChanged = (state) => {
     this.props.handleClick(this.props.history.push)
   }
 
+  handleChange = (e) => {
+    console.log("on")
+    this.setState({togglePlayer: !this.state.togglePlayer})
+  }
+
 
 
   render(){
@@ -151,6 +158,8 @@ onStateChanged = (state) => {
       position,
       duration,
       playing,
+      nowPlaying,
+      togglePlayer
     } = this.state;
 
     return(
@@ -161,50 +170,60 @@ onStateChanged = (state) => {
             <h2>Partify</h2>
           </div>
 
+
           <div class="right item">
+           <br></br>
             <a href='http://localhost:8888/'>
-              <div class="ui primary button">Log Into Spotify</div>
+              <div class="ui button">Log Into Spotify</div>
            </a>
            <a>
-             <div class="ui primary button" onClick={this.onClick}>Log Out</div>
+             <div class="ui button" onClick={this.onClick}>Log Out</div>
           </a>
           </div>
         </div>
 
     {error && <p>Error: {error}</p>}
+       <Radio toggle style={{float:'right'}} onChange={this.handleChange}  />
 
     {loggedIn ?
     (<div>
-      <div id='music-player'>
+        <div id='music-player'>
+          {togglePlayer ?
+            <div>
+          <h2 class="ui center aligned icon header" id='nowplaying'>
+            <i class="play icon" onClick={() => this.handleLogin()}></i>
+            NOW PLAYING
+          </h2>
+          <p id='nowplaying'>Artist: {artistName}</p>
+          <p id='nowplaying'>Track: {trackName}</p>
+          <p id='nowplaying'>Album: {albumName}</p>
+          <p>
 
-      <h2 class="ui center aligned icon header" id='nowplaying'>
-        <i class="play icon" onClick={() => this.handleLogin()}></i>
-        NOW PLAYING
-      </h2>
-      {/*<button onClick={() => this.handleLogin()}>START THE PARTYYYYYY</button>*/}
-      <p id='nowplaying'>Artist: {artistName}</p>
-      <p id='nowplaying'>Track: {trackName}</p>
-      <p id='nowplaying'>Album: {albumName}</p>
-      <p>
-        <button onClick={() => this.onPrevClick()}>Previous</button>
-        <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
-        <button onClick={() => this.onNextClick()}>Next</button>
-      </p>
-      </div>
-
+            {nowPlaying ?
+              <div>
+              <button onClick={() => this.onPrevClick()}>Previous</button>
+              <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
+              <button onClick={() => this.onNextClick()}>Next</button>
+              </div>
+              :
+              null
+              }
+            </p>
+            </div>
+            :
+            <div>
+            <h1 id='jukebox' style={{color:'white'}}>JUKEBOX</h1>
+            </div>
+          }
+        </div>
          <PartyRoom token={this.state.token} />
-
-    </div>
-
-
-
+      </div>
     )
     :
     (<div>
       <h1>Please Log into Spotify</h1>
      </div>)
     }
-
   </div>
     )
   }

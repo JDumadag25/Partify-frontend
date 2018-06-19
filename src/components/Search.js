@@ -37,8 +37,8 @@ resetComponent = () => this.setState({ results: [], query: '' })
       <div>
         <Form>
           <Form.Field style={{marginRight:45}}>
-            <label>Search</label>
-            <input placeholder='Search' onChange={this.handleSearchChange}  />
+            <label>Add a song to the Playlist</label>
+            <input placeholder='Search for Song Title' onChange={this.handleSearchChange}  />
           </Form.Field>
         </Form>
         <div class="eight wide column" style={{overflow: 'auto', maxHeight: 440, padding: 50}}>{songSearch}</div>

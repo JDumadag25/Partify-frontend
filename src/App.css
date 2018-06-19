@@ -40,8 +40,8 @@
 
 #music-player{
   background-image: url('../src/images/background.jpg');
-  height: 425px;
-  padding-top: 60px
+  height: 300px;
+  padding-top: 25px
 }
 
 #nowplaying{
@@ -55,8 +55,8 @@
 }
 
 #chatbox{
-  height: 550px;
-  max-height: 550px;
+  height: 565px;
+  max-height: 565px;
   overflow: auto;
   background-color: white;
   margin-right: 20px;
@@ -65,5 +65,20 @@
 }
 
 #chatfield{
-margin-right: 17px
+  margin-right: 17px
+
+}
+
+#chatheader{
+  color: white;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+#textbox{
+max-width: 335px
+}
+
+#jukebox{
+  padding-top: 100px
 }

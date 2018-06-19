@@ -28,7 +28,7 @@ class PartyRoom extends React.Component{
          downvotes:0,
          isClicked: false,
          votedOn: false,
-         renderTab: 'music'
+         renderTab: 'search'
        }
     }
 
@@ -186,17 +186,13 @@ console.log(this.state.voted);
                 vertical
                 inverted
               >
-                <Menu.Item onClick={() => this.changeTab('search')} name='search'>
+                <Menu.Item  onClick={() => this.changeTab('search')} name='search'>
                   <Icon name='search' />
                   Search
                 </Menu.Item>
-                <Menu.Item onClick={() => this.changeTab('music')} name='music'>
+                <Menu.Item  onClick={() => this.changeTab('music')} name='music'>
                   <Icon name='music' />
                   Playlist
-                </Menu.Item>
-                <Menu.Item onClick={() => this.changeTab('chat')} name='chat'>
-                  <Icon name='chat' />
-                  Chat
                 </Menu.Item>
               </Sidebar>
               <Sidebar.Pusher id='component'>
