@@ -57,14 +57,16 @@ handleSendEvent = (event) => {
         <h3>Chat</h3>
         {chat}
       </div>
-      <Form>
-        <Form.Field id='chatfield'>
-            <Form.Group>
-             <Form.Input placeholder='Chat' onChange={this.chatMessage} value={this.state.currentMessage } id='textbox' />
-             <Form.Button content='Submit' onClick={this.handleSendEvent} />
-           </Form.Group>
-        </Form.Field>
-      </Form>
+      <div id='textinput'>
+          <Form>
+            <Form.Field>
+                <Form.Group id='textgroup' >
+                 <Form.Input placeholder='Chat' onChange={this.chatMessage} value={this.state.currentMessage } />
+                 <Form.Button content='Submit' onClick={this.handleSendEvent}/>
+               </Form.Group>
+            </Form.Field>
+          </Form>
+      </div>
     </div>
     )
   }
