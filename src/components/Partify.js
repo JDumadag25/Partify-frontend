@@ -1,11 +1,7 @@
 import React from 'react'
 import PartyRoom from './PartyRoom'
-import { Button, Menu, Card, Icon, Image, Radio } from 'semantic-ui-react'
-import { NavLink } from 'react-router-dom';
-import background from '../images/background.jpg'
+import { Radio, Icon, Button } from 'semantic-ui-react'
 import SpotifyWebApi from 'spotify-web-api-js';
-const spotifyApi = new SpotifyWebApi();
-
 
 class Partify extends React.Component{
   constructor(props) {
@@ -201,9 +197,12 @@ onStateChanged = (state) => {
 
             {nowPlaying ?
               <div>
-              <button onClick={() => this.onPrevClick()}>Previous</button>
-              <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
-              <button onClick={() => this.onNextClick()}>Next</button>
+                <Button.Group >
+                  <Button onClick={() => this.onPrevClick()} icon> <Icon name='step backward' onClick={() => this.onPrevClick()} /> </Button>
+                  {playing ? <Button onClick={() => this.onPlayClick()} icon> <Icon name='pause' /> </Button> :
+                  <Button onClick={() => this.onPlayClick()} icon> <Icon name='play' /> </Button>}
+                  <Button onClick={() => this.onNextClick()} icon> <Icon name='step forward' /> </Button>
+                </Button.Group>
               </div>
               :
               null
