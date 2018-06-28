@@ -17,8 +17,6 @@ const { song } = this.props
       <List celled id='song-list'>
          <List.Item>
            <List.Content floated='right'>
-            {/* <Button compact size='small' onClick={this.playSong}>Play</Button> */}
-            {/* <Button compact size='small' onClick={this.props.removeSong} value={song.uri}>Remove</Button>*/}
            </List.Content>
            <List.Content floated='left'>
              <i class="large itunes note icon"></i>

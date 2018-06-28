@@ -1,22 +1,22 @@
 import React from 'react'
 import Songs from './Songs'
 import Search from './Search'
-import Results from './Results'
 import SongVote from './SongVote'
 import Chat from './Chat'
 import ActionCable from 'actioncable'
-import { NavLink } from 'react-router-dom';
-import { Grid, Image, Sidebar, Segment, Button, Menu, Icon, Header } from 'semantic-ui-react'
-// import Pic from '../images/song.jpg'
+import { Grid, Sidebar, Segment, Menu, Icon} from 'semantic-ui-react'
 import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi
 
+//---Enter the playlist you would like to use here---//
+const partyplaylist = ''
 
 class PartyRoom extends React.Component{
   constructor(props){
     super(props)
       spotifyApi.setAccessToken(this.props.token)
       this.state={
+        user:'',
         playlist:[],
         selectedSong :{
           name:'NAME',
@@ -33,6 +33,7 @@ class PartyRoom extends React.Component{
     }
 
   componentDidMount = () => {
+    this.getUser()
     this.getPlaylists()
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
     this.subscription = cable.subscriptions.create('SongsChannel', {
@@ -40,13 +41,19 @@ class PartyRoom extends React.Component{
     })
   }
 
+  getUser = () => {
+    spotifyApi.getMe()
+    .then(res => this.setState({user: res.id}))
+  }
+
   getPlaylists = () => {
     console.log('playlist rendered');
-    spotifyApi.getPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM')
+    spotifyApi.getPlaylist(this.state.user, partyplaylist)
     .then(res => res.tracks.items.map(item => {
       this.setState({playlist:[...this.state.playlist, item.track]})
     }) )
   }
+
 
   handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid, vote}) => {
     if(uri !== this.state.selectedSong.uri ){
@@ -135,7 +142,7 @@ class PartyRoom extends React.Component{
   addSong = async() => {
     let uri = this.state.selectedSong.uri
     const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
-    spotifyApi.addTracksToPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [uri])
+    spotifyApi.addTracksToPlaylist(this.state.user, partyplaylist, [uri])
     await this.setState({playlist: [...this.state.playlist, newSong]})
 
   }
@@ -152,8 +159,6 @@ class PartyRoom extends React.Component{
 
 
   render(){
-
-console.log(this.state.voted);
 
     const { renderTab } = this.state
 

@@ -51,7 +51,7 @@ class Partify extends React.Component{
       if (window.Spotify !== null) {
         clearInterval(this.playerCheckInterval);
         this.player = new window.Spotify.Player({
-          name: "Justin's spotify player",
+          name: "Spotify player",
           getOAuthToken: cb => { cb(token); },
         });
         this.createEventHandlers();
@@ -163,7 +163,7 @@ onStateChanged = (state) => {
 
         <div class="ui inverted menu">
           <div class="item">
-            <h2>Partify</h2>
+            <h2>Party-fy</h2>
           </div>
 
 
