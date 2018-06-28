@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: black
 }
 
 .App-logo {
@@ -25,4 +26,70 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+#component{
+  margin-right: 50px;
+  height: 600px;
+  overflow: auto
+}
+
+#song-list{
+  max-height: 700px;
+}
+
+#music-player{
+  background-image: url('../src/images/background.jpg');
+  height: 275px;
+  padding-top: 25px
+}
+
+#nowplaying{
+  color: white
+}
+
+#chat {
+  margin: 20px;
+  max-height: 530px;
+  overflow: auto
+}
+
+#chatbox{
+  height: 565px;
+  max-height: 565px;
+  overflow: auto;
+  background-color: white;
+  margin-right: 20px;
+  margin-top: 20px
+
+}
+
+#chatheader{
+  color: white;
+  font-size: 20px;
+  margin-right: 20px;
+}
+
+#jukebox{
+  padding-top: 50px;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 100px;
+  letter-spacing: 35px;
+}
+
+@media only screen and (min-width:1266px) {
+
+  .ui.form {
+    width:96.6%;
+  }
+
+  #chatbox {
+    max-height: 550px !important;
+    margin-bottom: 1em !important;
+  }
+
+  #textgroup > .field:first-of-type {
+    width:100%;
+  }
+
 }

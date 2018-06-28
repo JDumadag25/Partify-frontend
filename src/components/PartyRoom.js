@@ -1,19 +1,23 @@
 import React from 'react'
 import Songs from './Songs'
 import Search from './Search'
-import Results from './Results'
 import SongVote from './SongVote'
-import { Grid, Image } from 'semantic-ui-react'
-// import Pic from '../images/song.jpg'
+import Chat from './Chat'
+import ActionCable from 'actioncable'
+import { Grid, Sidebar, Segment, Menu, Icon} from 'semantic-ui-react'
 import SpotifyWebApi from 'spotify-web-api-js';
-const spotifyApi = new SpotifyWebApi();
+const spotifyApi = new SpotifyWebApi
+
+//---Enter the playlist you would like to use here---//
+const partyplaylist = ''
+
 
 class PartyRoom extends React.Component{
   constructor(props){
     super(props)
       spotifyApi.setAccessToken(this.props.token)
-
       this.state={
+        user:'',
         playlist:[],
         selectedSong :{
           name:'NAME',
@@ -22,93 +26,203 @@ class PartyRoom extends React.Component{
           uri:''
         },
          upvotes:0,
-         downvotes:0
+         downvotes:0,
+         isClicked: false,
+         votedOn: false,
+         renderTab: 'search'
        }
     }
 
   componentDidMount = () => {
+    this.getUser()
     this.getPlaylists()
+    const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+    this.subscription = cable.subscriptions.create('SongsChannel', {
+      received: this.handleNewSongs
+    })
+  }
+
+  getUser = () => {
+    spotifyApi.getMe()
+    .then(res => this.setState({user: res.id}))
   }
 
   getPlaylists = () => {
     console.log('playlist rendered');
-    spotifyApi.getPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM')
+    spotifyApi.getPlaylist(this.state.user, partyplaylist)
     .then(res => res.tracks.items.map(item => {
       this.setState({playlist:[...this.state.playlist, item.track]})
     }) )
   }
 
 
+  handleNewSongs = async({name, artist, image, uri, upvotes, downvotes, trackid, vote}) => {
+    if(uri !== this.state.selectedSong.uri ){
+      console.log('Song is different, Changing State');
+        await this.setState({selectedSong: {
+          name: name,
+          artist: artist,
+          image: image,
+          uri: uri,
+          trackid: trackid
+        },
+        upvotes:upvotes,
+        downvotes:downvotes,
+        isClicked:vote,
+        votedOn: true
+      })
+
+    } else if (upvotes === 2) {
+
+        const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
+        await this.setState({playlist: [...this.state.playlist, newSong]})
+        this.resetComponent()
+        console.log("song is the same");
+      } else {
+        console.log(upvotes);
+      }
+  }
+
+
+
+
 //-------------------------- METHODS FOR VOTING----------------------//
-  getSong = (e) => {
-
-    spotifyApi.getTrack(e.target.value)
-    .then(res =>  this.setState({selectedSong: {info: res, album: res.album}}))
-
+  getSong = async(e) => {
+    const res = await spotifyApi.getTrack(e.target.value)
+     await this.setState({chosenSong: res,
+      selectedSong: {
+      name: res.name,
+      uri: res.uri,
+      artist: res.album.artists[0].name,
+      image: res.album.images[0].url,
+      trackid: res.id
+    },
+    upvotes: 1,
+    downvotes: 1,
+    isClicked: true,
+    votedOn: false
+  }
+ )
+  await this.sendToBack()
 }
 
-  handleUpvote = () => {
+  sendToBack = async() => {
+    console.log("Sending to the backend");
+    this.subscription.send({ name: this.state.selectedSong.name,
+      artist: this.state.selectedSong.artist,
+      uri: this.state.selectedSong.uri,
+      image: this.state.selectedSong.image,
+      upvotes: this.state.upvotes,
+      downvotes: this.state.downvotes,
+      trackid: this.state.selectedSong.trackid,
+      vote: this.state.isClicked,
+      id: 1 })
+  }
+
+
+  handleUpvote = async() => {
     const currentcount = this.state.upvotes
-    this.setState({upvotes: currentcount + 1 })
-    if (currentcount > 3 ) {
+    console.log('upvotes',this.state.upvotes);
+    await this.setState({upvotes: currentcount + 1 })
+    await this.sendToBack()
+    if (this.state.upvotes === 2 ) {
       this.addSong()
       this.resetComponent()
     }
   }
 
-  handleDownVote = () => {
+  handleDownVote = async() => {
     const currentcount = this.state.downvotes
-    this.setState({downvotes: currentcount + 1 })
-    if (currentcount > 3 ) {
-     this.resetComponent()
+    await this.setState({downvotes: currentcount + 1 })
+    await this.sendToBack()
+    if (this.state.downvotes === 2 ) {
+     await this.resetComponent()
    }
   }
 
-  addSong = () => {
-    let uri = this.state.selectedSong.info.uri
-    spotifyApi.addTracksToPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [uri])
-    this.setState({playlist: [...this.state.playlist, this.state.selectedSong.info]})
+  addSong = async() => {
+    let uri = this.state.selectedSong.uri
+    const newSong = await spotifyApi.getTrack(this.state.selectedSong.trackid )
+    spotifyApi.addTracksToPlaylist(this.state.user, partyplaylist, [uri])
+    await this.setState({playlist: [...this.state.playlist, newSong]})
+
   }
 
-  resetComponent = () => this.setState({selectedSong :{name:'NAME', artist:'ARTIST',image:'', uri:''}, upvotes:0, downvotes:0 })
-
-  //---------------------------------------------------------------------------//
-  //--------------------------Methods to remove songs--------------------------//
-
-  removeSong = (e) => {
-    console.log('remove song click');
-    console.log(e.target.value);
-    let trackUri = e.target.value
-    spotifyApi.removeTracksFromPlaylist('justdumi','5TYxdDHbPlqDLm8mhtXBDM', [trackUri])
-    const updatedPlaylist = this.state.playlist.filter(song => {
-      return song.uri !== trackUri
-    })
-    this.setState({playlist: updatedPlaylist})
+  resetComponent = async() => {
+    console.log('resetting state');
+    await this.setState({chosenSong: '', selectedSong :{name:'', artist:'',image:'', uri:''}, upvotes:0, downvotes:0, isClicked: false, votedOn:false, renderTab: 'music' })
+    await this.sendToBack()
   }
 
+  changeTab = (tabName) => {
+       this.setState({ renderTab: tabName })
+   }
 
-  //---------------------------------------------------------------------------//
 
   render(){
-    console.log(this.state);
+
+    const { renderTab } = this.state
+
     const songs = this.state.playlist.map(song => {
-      return <Songs song={song} removeSong={this.removeSong} />
+      return <Songs song={song} removeSong={this.removeSong}  />
     })
+
+    const RenderedContent = ({ tabName }) => {
+      if (tabName === 'music') {
+        return songs
+    }
+      if (tabName === 'search') {
+        return <Search token={this.props.token} handleClick={this.getSong}/>
+    }
+  }
 
     return(
       <div>
-        <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} />
-        <div class="ui grid">
-          <div class="eight wide column" style={{overflow: 'auto', maxHeight: 500, padding: 50}}>
-            {songs}
+      <SongVote id='songcard' data={this.state.selectedSong} handleUpvote={this.handleUpvote} handleDownVote={this.handleDownVote} upvotes={this.state.upvotes} downvotes={this.state.downvotes} votedOn={this.state.votedOn} isClicked={this.state.isClicked}/>
+
+      <Grid>
+        <Grid.Column width={12}>
+          <div id='menu' style={{padding:20}}>
+            <Sidebar.Pushable as={Segment} style={{maxHeight: 700}}>
+              <Sidebar
+                as={Menu}
+                width='thin'
+                visible
+                icon='labeled'
+                vertical
+                inverted
+              >
+                <Menu.Item  onClick={() => this.changeTab('search')} name='search'>
+                  <Icon name='search' />
+                  Search
+                </Menu.Item>
+                <Menu.Item  onClick={() => this.changeTab('music')} name='music'>
+                  <Icon name='music' />
+                  Playlist
+                </Menu.Item>
+              </Sidebar>
+              <Sidebar.Pusher id='component'>
+                <Segment basic id='component' >
+                  <RenderedContent tabName={renderTab} />
+                </Segment>
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
           </div>
-          <div class="eight wide column">
-            <Search token={this.props.token} handleClick={this.getSong}/>
-          </div>
-        </div>
+        </Grid.Column>
+        <Grid.Column width={4} >
+          <Chat/>
+        </Grid.Column>
+      </Grid>
+
       </div>
     )
   }
+
+
 }
+
+
+
+
 
 export default PartyRoom
