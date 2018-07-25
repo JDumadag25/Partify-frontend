@@ -4,6 +4,8 @@ PARTY-FY is the modern day jukebox for your next party. It is a collaborative pl
 
 You will also need to run a node server to allow Spotify's Oauth to work to be able to log in to your account (instructions are down below)
 
+[Video Demo](https://youtu.be/ZXYmRIIfzhQ)
+
 ## Setting up your node server for Spotify Authentication:
 
 Fork and Clone [this repository](https://github.com/spotify/web-api-auth-examples) then follow their instructions.
