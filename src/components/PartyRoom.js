@@ -18,6 +18,10 @@ class PartyRoom extends React.Component{
       spotifyApi.setAccessToken(this.props.token)
       this.state={
         user:'',
+        collabplaylist:'5TYxdDHbPlqDLm8mhtXBDM',
+        currentplaylist:'',
+        selectedplaylist:'',
+        usersPlaylists:[],
         playlist:[],
         selectedSong :{
           name:'NAME',
@@ -50,12 +54,12 @@ class PartyRoom extends React.Component{
 
   getUserPlaylists = () => {
     spotifyApi.getUserPlaylists()
-    .then(res => console.log(res))
+    .then(res => this.setState({usersPlaylists: res.items}))
   }
 
   getPlaylists = () => {
     console.log('playlist rendered');
-    spotifyApi.getPlaylist(this.state.user, partyplaylist)
+    spotifyApi.getPlaylist(this.state.user, this.state.collabplaylist)
     .then(res => res.tracks.items.map(item => {
       this.setState({playlist:[...this.state.playlist, item.track]})
     }) )
@@ -166,7 +170,7 @@ class PartyRoom extends React.Component{
 
 
   render(){
-
+    console.log(this.state.usersPlaylists);
     const { renderTab } = this.state
 
     const songs = this.state.playlist.map(song => {
