@@ -1,4 +1,3 @@
-## (Currently being modified)
 # PARTY-FY
 
 PARTY-FY is the modern day jukebox for your next party. It is a collaborative playlist using the Spotify API. Users can search for a song and put it vote for the other party goers to decide if it should be added to the playlist. There is also a chat feature where you can interact with everyone in the party. This app requires a Spotify premium account to be able to play songs. This app utilizes a react front end and a rails back-end [located here](https://github.com/JDumadag25/Partify-backend), the back end authorizes users and allows the chat and vote feature to work using ActionCable web-sockets.
