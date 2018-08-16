@@ -9,7 +9,7 @@ import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi
 
 //---Enter the playlist you would like to use here---//
-const partyplaylist = ''
+const partyplaylist = '5TYxdDHbPlqDLm8mhtXBDM'
 
 
 class PartyRoom extends React.Component{
@@ -35,6 +35,7 @@ class PartyRoom extends React.Component{
 
   componentDidMount = () => {
     this.getUser()
+    this.getUserPlaylists()
     this.getPlaylists()
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
     this.subscription = cable.subscriptions.create('SongsChannel', {
@@ -45,6 +46,11 @@ class PartyRoom extends React.Component{
   getUser = () => {
     spotifyApi.getMe()
     .then(res => this.setState({user: res.id}))
+  }
+
+  getUserPlaylists = () => {
+    spotifyApi.getUserPlaylists()
+    .then(res => console.log(res))
   }
 
   getPlaylists = () => {
