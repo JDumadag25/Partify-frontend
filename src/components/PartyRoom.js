@@ -9,7 +9,9 @@ import SpotifyWebApi from 'spotify-web-api-js';
 const spotifyApi = new SpotifyWebApi
 
 //---Enter the playlist you would like to use here---//
-const partyplaylist = '5TYxdDHbPlqDLm8mhtXBDM'
+const partyplaylist = '64W5bbmXSTUxg6negfo96k'
+
+// const partyplaylist = '5TYxdDHbPlqDLm8mhtXBDM'
 
 
 class PartyRoom extends React.Component{
@@ -18,7 +20,7 @@ class PartyRoom extends React.Component{
       spotifyApi.setAccessToken(this.props.token)
       this.state={
         user:'',
-        collabplaylist:'5TYxdDHbPlqDLm8mhtXBDM',
+        collabplaylist:'64W5bbmXSTUxg6negfo96k',
         currentplaylist:'',
         selectedplaylist:'',
         usersPlaylists:[],
