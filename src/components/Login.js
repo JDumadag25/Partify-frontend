@@ -15,8 +15,13 @@ class Login extends React.Component{
   }
 
   handleSubmit = (event) => {
-    event.preventDefault()
-    this.props.onSubmit(this.state.username, this.state.password, this.props.history.push);
+    event.preventDefault();
+    console.log(this.props);
+    // if (this.state.password === this.state.passwordConfirmation){
+    this.props.onSubmit(this.state.email, this.state.password, this.props.history.push)
+   // } else {
+   //  this.setState({errors: ['Passwords do not match']})
+   // }
   }
 
   render(){

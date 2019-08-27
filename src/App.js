@@ -31,8 +31,6 @@ class App extends Component {
         localStorage.setItem('user_id', json.user_id);
         localStorage.setItem('username', json.username);
 
-
-
         callback('/partify');
       } else {
         this.setState({errors: [json.errors]})
