@@ -15,28 +15,28 @@ class App extends Component {
 
 
 
-  login = (username, password, callback) => {
-    console.log(callback);
-    fetch('http://localhost:3000/sessions/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({ username, password })})
-      .then(res => res.json())
-      .then(json => {
-        if(json.token){
-        localStorage.setItem('token', json.token);
-        localStorage.setItem('user_id', json.user_id);
-        localStorage.setItem('username', json.username);
-
-        callback('/partify');
-      } else {
-        this.setState({errors: [json.errors]})
-      }
-      });
-  }
+  // login = (username, password, callback) => {
+  //   console.log(callback);
+  //   fetch('http://localhost:3000/sessions/', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json',
+  //     },
+  //     body: JSON.stringify({ username, password })})
+  //     .then(res => res.json())
+  //     .then(json => {
+  //       if(json.token){
+  //       localStorage.setItem('token', json.token);
+  //       localStorage.setItem('user_id', json.user_id);
+  //       localStorage.setItem('username', json.username);
+  //
+  //       callback('/partify');
+  //     } else {
+  //       this.setState({errors: [json.errors]})
+  //     }
+  //     });
+  // }
 
   register = (username, password, callback) => {
     fetch('http://localhost:3000/users/', {
@@ -82,7 +82,7 @@ class App extends Component {
 
           <Route path="/register" render={(props) => <Register submitLabel="Register" onSubmit={this.register} {...props} errors={this.state.errors}/>} />
 
-          { localStorage.getItem('token') ? <Route exact path="/partify" render={(props) => <Partify {...props} handleClick={this.logout} />} /> : <Redirect to="/login" /> }
+          <Route path="/partify" render={(props) => <Partify {...props} handleClick={this.logout}/>}/>
         </Switch>
       </Router>
 
@@ -91,3 +91,5 @@ class App extends Component {
 }
 
 export default App;
+
+//{ localStorage.getItem('token') ? <Route exact path="/partify" render={(props) => <Partify {...props} handleClick={this.logout} />} /> : <Redirect to="/login" /> }

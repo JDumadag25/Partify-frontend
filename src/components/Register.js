@@ -16,13 +16,34 @@ class Register extends React.Component {
  }
 
  handleSubmit = (event) => {
-   event.preventDefault();
-   console.log(this.props);
-   if (this.state.password === this.state.passwordConfirmation){
-   this.props.onSubmit(this.state.username, this.state.password, this.props.history.push)
- } else {
-   this.setState({errors: ['Passwords do not match']})
- }
+   const {username, password} = this.state;
+ //   event.preventDefault();
+ //   console.log(this.props);
+ //   if (this.state.password === this.state.passwordConfirmation){
+ //   this.props.onSubmit(this.state.username, this.state.password, this.props.history.push)
+ // } else {
+ //   this.setState({errors: ['Passwords do not match']})
+ // }
+ fetch('http://localhost:3000/users/', {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json',
+     'Accept': 'application/json',
+   },
+   body: JSON.stringify({ username, password })})
+   .then(res => res.json())
+   .then(json => {
+     if(json.token){
+     localStorage.setItem('token', json.token);
+     localStorage.setItem('user_id', json.user_id);
+     localStorage.setItem('username', json.username);
+
+     this.props.history.push("/partify");
+   } else {
+     console.log(json.errors);
+     this.setState({errors:[json.errors]})
+   }
+   });
  }
 
   render(){

@@ -41,7 +41,6 @@ class PartyRoom extends React.Component{
 
   componentDidMount = () => {
     this.getUser()
-    this.getUserPlaylists()
     this.getPlaylists()
     const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
     this.subscription = cable.subscriptions.create('SongsChannel', {
@@ -54,10 +53,7 @@ class PartyRoom extends React.Component{
     .then(res => this.setState({user: res.id}))
   }
 
-  getUserPlaylists = () => {
-    spotifyApi.getUserPlaylists()
-    .then(res => this.setState({usersPlaylists: res.items}))
-  }
+
 
   getPlaylists = () => {
     console.log('playlist rendered');
@@ -238,3 +234,15 @@ class PartyRoom extends React.Component{
 
 
 export default PartyRoom
+
+
+
+
+
+
+
+// this.getUserPlaylists()
+// getUserPlaylists = () => {
+//   spotifyApi.getUserPlaylists()
+//   .then(res => this.setState({usersPlaylists: res.items}))
+// }
